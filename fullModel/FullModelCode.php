@@ -214,6 +214,7 @@ class FullModelCode extends ModelCode {
 		foreach($columns as $name => $column) {
 			if(!$found 
 					&& $column->type != 'datetime'
+					&& strpos($column->dbType, 'bigint') !== 0 // BIGINT is handled as string to not loose precision, but it doesn't mean that it's actually a candidate for identification column
 					&& $column->type==='string' 
 					&& !$column->isPrimaryKey) {
 				return $column->name;
