@@ -68,13 +68,26 @@ abstract class <?php echo 'Base' . $modelClass; ?> extends <?php echo $this->bas
 
 	public function rules()
 	{
-		return array(
+		return array_merge(
+		    parent::rules(), array(
 <?php
 		foreach($rules as $rule) {
 			echo "\t\t\t$rule,\n";
 		}
 ?>
 			array('<?php echo implode(', ', array_keys($columns)); ?>', 'safe', 'on'=>'search'),
+		    )
+		);
+	}
+
+	public function behaviors()
+	{
+		return array_merge(
+		    parent::behaviors(), array(
+			'savedRelated' => array(
+				'class' => 'gii-template-collection.components.CSaveRelationsBehavior'
+			)
+		    )
 		);
 	}
 
@@ -94,7 +107,7 @@ abstract class <?php echo 'Base' . $modelClass; ?> extends <?php echo $this->bas
 		return array(
 <?php
 		foreach($labels as $name=>$label) {
-			echo "\t\t\t'$name' => Yii::t('app', '$label'),\n";
+			echo "\t\t\t'$name' => Yii::t('".$this->messageCatalog."', '$label'),\n";
 		}
 ?>
 		);
